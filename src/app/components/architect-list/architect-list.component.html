@@ -1,0 +1,12 @@
+<ion-toolbar>
+  <ion-searchbar color="light" placeholder="zoek architect" [(ngModel)]="searchString"
+    (ionChange)="search()">
+  </ion-searchbar>
+</ion-toolbar>
+<ion-content>
+  <ion-virtual-scroll [items]="filteredValues" approxItemHeight="44px">
+      <ion-item *virtualItem="let architect">
+          {{architect.actor.value}}
+        </ion-item>
+  </ion-virtual-scroll>
+</ion-content>

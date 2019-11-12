@@ -1,8 +1,11 @@
 <app-global-header></app-global-header>
-<ion-content>
-  <ion-list>
-    <ion-item *ngFor="let architect of architecten">
-      {{architect.actor.value}}
-    </ion-item>
-  </ion-list>
+
+<ion-content padding>
+  <p>Welkom op het klantportaal van de Rijksdienst voor het culureel erfgoed.<br>
+    Zoek hieronder de architect die u zoekt.</p>
+
+  Totaal aantal gevonden architecten: <b>{{total}}</b>
+  <ion-content class="architects-wrapper">
+    <app-architect-list (total)="totalUpdate($event)"></app-architect-list>
+  </ion-content>
 </ion-content>

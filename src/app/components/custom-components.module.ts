@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { GlobalHeaderComponent } from './global-header/global-header.component';
+import { ArchitectListComponent } from './architect-list/architect-list.component';
 
 @NgModule({
   imports: [
@@ -10,7 +11,13 @@ import { GlobalHeaderComponent } from './global-header/global-header.component';
     FormsModule,
     IonicModule,
   ],
-  declarations: [GlobalHeaderComponent],
-  exports: [GlobalHeaderComponent]
+  declarations: [
+    GlobalHeaderComponent,
+    ArchitectListComponent
+  ],
+  exports: [
+    GlobalHeaderComponent,
+    ArchitectListComponent
+  ]
 })
-export class CustomComponentsModule {}
+export class CustomComponentsModule { }
