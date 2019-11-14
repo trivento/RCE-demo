@@ -46,7 +46,13 @@ export class SearchListComponent implements OnChanges {
       return;
     }
     this.filteredValues = this.values.filter(value => {
-      return value.toLowerCase().indexOf(this.searchString.toLowerCase()) > -1;
+      let retVal = false;
+      Object.keys(value).forEach(key => {
+        if (value[key].toLowerCase().indexOf(this.searchString.toLowerCase()) > -1) {
+          retVal =  true;
+        }
+      });
+     return retVal;
     });
     this.total.emit(this.filteredValues.length);
   }
