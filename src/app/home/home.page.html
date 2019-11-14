@@ -1,11 +1,19 @@
 <app-global-header></app-global-header>
-
-<ion-content padding>
-  <p>Welkom op het klantportaal van de Rijksdienst voor het culureel erfgoed.<br>
-    Zoek hieronder de architect die u zoekt.</p>
-
-  Totaal aantal gevonden architecten: <b>{{total}}</b>
-  <ion-content class="architects-wrapper">
-    <app-architect-list (total)="totalUpdate($event)"></app-architect-list>
-  </ion-content>
+<ion-content no-padding>
+    <ion-grid>
+        <ion-row>
+            <ion-col>
+                <p>Welkom op het klantportaal van de Rijksdienst voor het cultureel erfgoed.<br>
+                    Zoek hieronder het rijksmonument dat u zoekt.</p>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col size="3">
+            <app-rijksmonument-list (total)="totalUpdate($event)"></app-rijksmonument-list>
+            </ion-col>
+            <ion-col size="9">
+            <app-rijksmonument-detail></app-rijksmonument-detail>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
 </ion-content>

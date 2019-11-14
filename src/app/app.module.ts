@@ -11,12 +11,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { httpInterceptorProviders } from './services/interceptors';
 import { SearchService } from './services/search/search.service';
 import { HttpClientModule } from '@angular/common/http';
+import {AgmCoreModule} from '@agm/core';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
     BrowserModule,
+    AgmCoreModule.forRoot({apiKey: 'AIzaSyDYUV7xng7k_I61cRhQdySGI8td8DCbUsE'}),
     IonicModule.forRoot(),
     HttpClientModule,
     AppRoutingModule

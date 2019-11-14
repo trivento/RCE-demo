@@ -1,14 +1,16 @@
 <ion-toolbar>
-  <ion-searchbar color="light" [placeholder]="'zoek ' + objectName" [(ngModel)]="searchString" (ionChange)="search()">
-  </ion-searchbar>
+    <ion-searchbar color="light" [placeholder]="'zoek ' + objectName" [(ngModel)]="searchString" (ionChange)="search()">
+    </ion-searchbar>
 </ion-toolbar>
-<ion-content>
-  <ion-virtual-scroll [items]="filteredValues" approxItemHeight="44px">
-    <ion-item *virtualItem="let value">
-      <div *ngFor="let item of value | keyvalue">
-          <b *ngIf="showKey">{{item.key}}: </b>
-          {{item.value}}
-      </div>
-    </ion-item>
-  </ion-virtual-scroll>
+<ion-content class="searchlist-wrapper">
+    <ion-virtual-scroll [items]="filteredValues" approxItemHeight="44px">
+        <ion-item *virtualItem="let value" (click)="setDetails(value)">
+            <ion-label>
+                <div *ngFor="let item of value | keyvalue">
+                    <b *ngIf="showKey">{{item.key}}: </b>
+                    {{item.value}}
+                </div>
+            </ion-label>
+        </ion-item>
+    </ion-virtual-scroll>
 </ion-content>
