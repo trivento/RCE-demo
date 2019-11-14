@@ -14,6 +14,7 @@ export class SearchListComponent implements OnChanges {
   @Output() total = new EventEmitter();
   @Input() objectName: string;
   @Input() query: string;
+  @Input() showKey: boolean;
 
   constructor(private searchService: SearchService) {
 
@@ -25,10 +26,14 @@ export class SearchListComponent implements OnChanges {
   }
 
   loadData(query) {
-    this.searchService.postRCEQuery(query).subscribe(res => {
-      this.filteredValues = this.values = res.results.bindings.map(item => {
-        //@ts-ignore
-        return item[res.head.vars[0]].value;
+    this.searchService.postRCEQuery(query).subscribe(rdfResult => {
+      this.filteredValues = this.values = rdfResult.results.bindings.map(item => {
+        let retVal: any = {};
+        rdfResult.head.vars.forEach(variable => {
+          //@ts-ignore
+          retVal[variable] = item[variable].value
+        });
+        return retVal;
       });
       this.total.emit(this.filteredValues.length);
     });;

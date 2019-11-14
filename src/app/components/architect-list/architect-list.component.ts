@@ -10,9 +10,9 @@ export class ArchitectListComponent {
   PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
   PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
   PREFIX ceo: <https://linkeddata.cultureelerfgoed.nl/def/ceo#>
-  SELECT DISTINCT ?actor WHERE {
+  SELECT DISTINCT ?architect WHERE {
     ?sub ceo:rol ?obj .
     FILTER CONTAINS(?obj, "architect")
-    ?sub ceo:actor ?actor .
+    ?sub ceo:actor ?architect .
   }`;
 }
