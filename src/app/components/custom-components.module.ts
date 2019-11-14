@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { GlobalHeaderComponent } from './global-header/global-header.component';
 import { ArchitectListComponent } from './architect-list/architect-list.component';
+import { SearchListComponent } from './search-list/search-list.component';
 
 @NgModule({
   imports: [
@@ -13,11 +14,13 @@ import { ArchitectListComponent } from './architect-list/architect-list.componen
   ],
   declarations: [
     GlobalHeaderComponent,
-    ArchitectListComponent
+    ArchitectListComponent,
+    SearchListComponent
   ],
   exports: [
     GlobalHeaderComponent,
-    ArchitectListComponent
+    ArchitectListComponent,
+    SearchListComponent
   ]
 })
 export class CustomComponentsModule { }

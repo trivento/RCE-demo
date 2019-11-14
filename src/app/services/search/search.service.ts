@@ -22,18 +22,18 @@ export class SearchService {
 
   }
 
-  public postRCEQuery(query: string): Observable<any[]> {
+  public postRCEQuery(query: string): Observable<RdfResult> {
     let headers: HttpHeaders = new HttpHeaders({
       'Content-type': 'application/x-www-form-urlencoded',
       'X-Api-Key': `${environment.token}`
     });    
 
-    return this.http.post(`${environment.backendApiUrl}`, `query=${query}`, {
+    return this.http.post<RdfResult>(`${environment.backendApiUrl}`, `query=${query}`, {
       headers: headers,
       responseType: "json"
     }).pipe(
-      map((response: RdfResult) => {
-        return response.results.bindings;
+      map((response) => {
+        return response;
       })
       );
   }
