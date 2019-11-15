@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UiService } from '../../services/ui/ui.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { SearchService } from 'src/app/services/search/search.service';
 import { MapsGeoMetrie } from '../../models/rijksmonument.model';
 
 @Component({
@@ -11,19 +10,17 @@ import { MapsGeoMetrie } from '../../models/rijksmonument.model';
     styleUrls: ['./rijksmonument-detail.component.scss'],
 })
 export class RijksmonumentDetailComponent implements OnInit, OnDestroy {
-    private items = [];
-    private item;
-    private geometrieWKT: MapsGeoMetrie = { huidigeNaam: '', geometrieWKT: '' };
+    items = [];
+    item;
+    geometrieWKT: MapsGeoMetrie = { huidigeNaam: '', geometrieWKT: '' };
     unsubscribe = new Subject<void>();
-    private query: string;
+    query: string;
 
-    constructor(private uiService: UiService,
-        private searchService: SearchService) {
+    constructor(private uiService: UiService) {
     }
 
     ngOnInit() {
         this.uiService.activeRijksmonument.pipe(takeUntil(this.unsubscribe)).subscribe(rm => {
-            console.log(rm);
             if (rm) {
                 this.item = rm;
                 if (this.item.cultureelHistorischObject) {

@@ -1,5 +1,7 @@
 {
   "name": "RCE-demo",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

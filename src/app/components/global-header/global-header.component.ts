@@ -20,7 +20,7 @@ export class GlobalHeaderComponent {
     ];
 
 
-    constructor(private router: Router) {
+    constructor(public router: Router) {
     }
 
     openMenu(item: string) {

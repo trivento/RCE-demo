@@ -83,7 +83,7 @@ export class D3Service {
     triples.forEach(triple => {
       //subject
       if (!nodes.find(node => {
-        node.id == triple[0];
+        return node.id == triple[0];
       })) {
         nodes.push(new Node({
           id: triple[0],
@@ -97,7 +97,7 @@ export class D3Service {
       }
       //object
       if (!nodes.find(node => {
-        node.id == triple[2];
+        return node.id == triple[2];
       })) {
         nodes.push(new Node({
           id: triple[2],
@@ -160,9 +160,6 @@ export class D3Service {
       .on("start", started));
   }
 
-  /** The interactable graph we will simulate in this article
-  * This method does not interact with the document, purely physical calculations with d3
-  */
   getForceDirectedGraph(nodes: Node[], links: Link[], options: { width, height }) {
     const sg = new ForceDirectedGraph(nodes, links, options);
     return sg;
