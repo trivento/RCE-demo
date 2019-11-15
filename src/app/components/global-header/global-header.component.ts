@@ -1,23 +1,26 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {Router} from '@angular/router';
 
 @Component({
-  selector: 'app-global-header',
-  templateUrl: './global-header.component.html',
-  styleUrls: ['./global-header.component.scss'],
+    selector: 'app-global-header',
+    templateUrl: './global-header.component.html',
+    styleUrls: ['./global-header.component.scss'],
 })
-export class GlobalHeaderComponent{
-  public appPages = [
-    {
-      title: 'Home',
-      url: '/home',
-      icon: 'home'
-    }
-  ];
+export class GlobalHeaderComponent {
 
-  constructor() { }
+    public appPages = [
+        {
+            title: 'Home',
+            url: '/home',
+            icon: 'home'
+        }
+    ];
 
-  openMenu(item: string) {
-    //TODO add routing
-    console.log(item);
+
+  constructor(private router: Router) {
   }
+
+    openMenu(item: string) {
+       this.router.navigate([item]);
+    }
 }

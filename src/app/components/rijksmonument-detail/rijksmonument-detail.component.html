@@ -1,4 +1,13 @@
-<p>
-  {{item?.cultureelHistorischObject}}
-</p>
-<app-maps [geometrieWKTList]="[geometrieWKT]"></app-maps>
+<ion-content>
+    <app-maps [geometrieWKTList]="[geometrieWKT]"></app-maps>
+    <ion-item>
+        <ion-label>
+            <h2>
+                {{item?.cultureelHistorischObject}}
+            </h2>
+            <div>
+                {{item?.omschrijving}}
+            </div>
+        </ion-label>
+    </ion-item>
+</ion-content>

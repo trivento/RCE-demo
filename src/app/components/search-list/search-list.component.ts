@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {SearchService} from '../../services/search/search.service';
 import {UiService} from '../../services/ui/ui.service';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-search-list',
@@ -19,6 +20,7 @@ export class SearchListComponent implements OnChanges {
     @Input() showKey: boolean;
 
     constructor(private searchService: SearchService,
+                private router: Router,
                 private uiService: UiService) {
 
     }
@@ -70,7 +72,8 @@ export class SearchListComponent implements OnChanges {
         this.total.emit(this.filteredValues.length);
     }
 
-    setDetails(item) {
+    navigateToDetails(item) {
         this.uiService.activeRijksmonument.next(item);
+        this.router.navigate(['detail']);
     }
 }
