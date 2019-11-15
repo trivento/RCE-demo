@@ -10,8 +10,8 @@
                     <ion-item *virtualItem="let value" (click)="navigateToDetails(value)">
                         <ion-label>
                             <div *ngFor="let item of value | keyvalue">
-                                <b *ngIf="showKey">{{item.key}}: </b>
-                                {{item.value}}
+                              <div *ngIf="hiddenKeys.indexOf(item.key) === -1"><b *ngIf="showKey">{{item.key}}: </b>
+                                {{item.value}}</div>
                             </div>
                         </ion-label>
                     </ion-item>
