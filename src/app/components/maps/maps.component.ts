@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 
 @Component({
     selector: 'app-maps',
@@ -7,53 +7,53 @@ import {Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges} from '
 })
 export class MapsComponent implements OnInit, OnChanges {
 
-    @Input() geometrieWKT: string;
+    @Input() geometrieWKTList: string[];
+    @Input() zoom = 16;
     lat: number;
     lng: number;
-    zoom = 14;
-    paths: any[] = [];
+    pathList: any = [];
+    markers: { lat: number, lng: number }[] = [];
 
     constructor() {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        this.geometrieWKT = changes.geometrieWKT.currentValue;
+        this.geometrieWKTList = changes.geometrieWKTList.currentValue;
         this.setMapsValues();
     }
+
     ngOnInit() {
         this.setMapsValues();
     }
 
     setMapsValues() {
-        switch (true) {
-            case this.geometrieWKT.startsWith('POINT') :
-                const latlon = this.geometrieWKT.substring(6, this.geometrieWKT.length - 1);
-                this.lat = this.getLat(latlon);
-                this.lng = this.getLng(latlon);
-                this.paths = [];
-                this.zoom = 14;
-                break;
-            case this.geometrieWKT.startsWith('POLYGON') :
-                const polygon = this.geometrieWKT.substring(9, this.geometrieWKT.length - 1);
-                this.paths = this.transformPolygonToPaths(polygon, 1);
-                this.lat = this.paths[0].lat;
-                this.lng = this.paths[0].lng;
-                this.zoom = 16;
-                break;
-            case this.geometrieWKT.startsWith('MULTIPOLYGON'):
-                const multipolygon = this.geometrieWKT.substring(15, this.geometrieWKT.length - 3);
-                this.paths = this.transformMultiPolygonToPaths(multipolygon);
-                this.lat = this.paths[0][0].lat;
-                this.lng = this.paths[0][0].lng;
-                this.zoom = 16;
-                break;
-            default:
-                this.lat = 0;
-                this.lng = 0;
-                this.paths = [];
-                this.zoom = 14;
-                break;
-        }
+        this.pathList = [];
+        this.markers = [];
+
+        this.geometrieWKTList.forEach(geo => {
+            switch (true) {
+                case geo.startsWith('POINT') :
+                    const latlon = geo.substring(6, geo.length - 1);
+                    this.lat = this.getLat(latlon);
+                    this.lng = this.getLng(latlon);
+                    this.markers.push({lat: this.getLat(latlon), lng: this.getLng(latlon)});
+                    break;
+                case geo.startsWith('POLYGON') :
+                    const polygon = geo.substring(9, geo.length - 1);
+                    this.pathList.push(this.transformPolygonToPaths(polygon, 1));
+                    // this.lat = this.pathList[0][0].lat;
+                    // this.lng = this.pathList[0][0].lng;
+                    break;
+                case geo.startsWith('MULTIPOLYGON'):
+                    const multipolygon = geo.substring(15, geo.length - 3);
+                    this.pathList.push(this.transformMultiPolygonToPaths(multipolygon));
+                    // this.lat = this.pathList[0][0][0].lat;
+                    // this.lng = this.pathList[0][0][0].lng;
+                    break;
+                default:
+                    break;
+            }
+        });
     }
 
     getLat(latlng: string) {

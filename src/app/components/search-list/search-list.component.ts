@@ -12,6 +12,7 @@ export class SearchListComponent implements OnChanges {
     private values: Array<any>;
     searchString: string;
     filteredValues: Array<any>;
+    geometrieWKTList: string[] = [];
     @Output() total = new EventEmitter();
     @Input() objectName: string;
     @Input() query: string;
@@ -39,13 +40,20 @@ export class SearchListComponent implements OnChanges {
                 return retVal;
             });
             this.total.emit(this.filteredValues.length);
+            this.setGeometrieWKTList(this.filteredValues);
             this.uiService.activeRijksmonument.next(this.filteredValues[0]);
         });
     }
 
+    setGeometrieWKTList(list: any[]) {
+        this.geometrieWKTList = list.map(item => {
+            return item.geometrieWKT;
+        });
+    }
     search(): void {
         if (!this.searchString) {
             this.filteredValues = this.values;
+            this.setGeometrieWKTList(this.filteredValues);
             this.total.emit(this.filteredValues.length);
             return;
         }
@@ -58,6 +66,7 @@ export class SearchListComponent implements OnChanges {
             });
             return retVal;
         });
+        this.setGeometrieWKTList(this.filteredValues);
         this.total.emit(this.filteredValues.length);
     }
 
