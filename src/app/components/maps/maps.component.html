@@ -4,7 +4,7 @@
           [longitude]="lng"
           [disableDefaultUI]="false"
           [zoomControl]="false">
-  <agm-marker *ngFor="let m of markers; let i = index" [latitude]="m.lat" [longitude]="m.lng" (markerClick)="clickedMarker('tekst', i)">
+  <agm-marker *ngFor="let m of markers; let i = index" [latitude]="m.lat" [longitude]="m.lng">
     <agm-info-window>
       <strong>{{m.huidigeNaam}}</strong>
     </agm-info-window>

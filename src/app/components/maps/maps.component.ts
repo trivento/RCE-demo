@@ -10,8 +10,8 @@ export class MapsComponent implements OnInit, OnChanges {
 
     @Input() geometrieWKTList: MapsGeoMetrie[];
     @Input() zoom = 16;
-    lat: number;
-    lng: number;
+    lat = 52.088648926989;
+    lng = 5.08957305275236;
     pathList: any = [];
     markers: Markers[] = [];
 
@@ -25,10 +25,6 @@ export class MapsComponent implements OnInit, OnChanges {
 
     ngOnInit() {
         this.setMapsValues();
-    }
-
-    clickedMarker(label: string, index: number) {
-        console.log(`clicked the marker: ${label || index}`)
     }
 
     setMapsValues() {
@@ -45,15 +41,27 @@ export class MapsComponent implements OnInit, OnChanges {
                     break;
                 case geo.geometrieWKT.startsWith('POLYGON') :
                     const polygon = geo.geometrieWKT.substring(9, geo.geometrieWKT.length - 1);
-                    this.pathList.push(this.transformPolygonToPaths(polygon, 1));
-                    this.lat = this.pathList[0][0].lat;
-                    this.lng = this.pathList[0][0].lng;
+                    const polygonPath = this.transformPolygonToPaths(polygon, 1);
+                    this.pathList.push(polygonPath);
+                    this.markers.push({
+                        huidigeNaam: geo.huidigeNaam,
+                        lat: polygonPath[0].lat,
+                        lng: polygonPath[0].lng
+                    });
+                    this.lat = polygonPath[0].lat;
+                    this.lng = polygonPath[0].lng;
                     break;
                 case geo.geometrieWKT.startsWith('MULTIPOLYGON'):
                     const multipolygon = geo.geometrieWKT.substring(15, geo.geometrieWKT.length - 3);
-                    this.pathList.push(this.transformMultiPolygonToPaths(multipolygon));
-                    this.lat = this.pathList[0][0].lat;
-                    this.lng = this.pathList[0][0].lng;
+                    const multipolygonPath = this.transformMultiPolygonToPaths(multipolygon);
+                    this.pathList.push(multipolygonPath);
+                    this.markers.push({
+                        huidigeNaam: geo.huidigeNaam,
+                        lat: multipolygonPath[0][0].lat,
+                        lng: multipolygonPath[0][0].lng
+                    });
+                    this.lat = multipolygonPath[0][0].lat;
+                    this.lng = multipolygonPath[0][0].lng;
                     break;
                 default:
                     break;
