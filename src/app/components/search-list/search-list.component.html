@@ -7,7 +7,7 @@
         <ion-row>
             <ion-col size="4">
                 <ion-virtual-scroll [items]="filteredValues" approxItemHeight="44px">
-                    <ion-item *virtualItem="let value" (click)="setDetails(value)">
+                    <ion-item *virtualItem="let value" (click)="navigateToDetails(value)">
                         <ion-label>
                             <div *ngFor="let item of value | keyvalue">
                                 <b *ngIf="showKey">{{item.key}}: </b>

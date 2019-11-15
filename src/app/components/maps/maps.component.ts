@@ -41,14 +41,14 @@ export class MapsComponent implements OnInit, OnChanges {
                 case geo.startsWith('POLYGON') :
                     const polygon = geo.substring(9, geo.length - 1);
                     this.pathList.push(this.transformPolygonToPaths(polygon, 1));
-                    // this.lat = this.pathList[0][0].lat;
-                    // this.lng = this.pathList[0][0].lng;
+                    this.lat = this.pathList[0][0].lat;
+                    this.lng = this.pathList[0][0].lng;
                     break;
                 case geo.startsWith('MULTIPOLYGON'):
                     const multipolygon = geo.substring(15, geo.length - 3);
                     this.pathList.push(this.transformMultiPolygonToPaths(multipolygon));
-                    // this.lat = this.pathList[0][0][0].lat;
-                    // this.lng = this.pathList[0][0][0].lng;
+                    this.lat = this.pathList[0][0].lat;
+                    this.lng = this.pathList[0][0].lng;
                     break;
                 default:
                     break;
