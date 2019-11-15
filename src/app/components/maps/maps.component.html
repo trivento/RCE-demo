@@ -1,0 +1,10 @@
+<ion-content>
+<agm-map  [latitude]="lat"
+          [zoom]="zoom"
+          [longitude]="lng"
+          [disableDefaultUI]="false"
+          [zoomControl]="false">
+  <agm-marker *ngFor="let m of markers; let i = index" [latitude]="m.lat" [longitude]="m.lng"></agm-marker>
+  <agm-polygon *ngFor="let p of pathList; let i = index" [paths]="p"></agm-polygon>
+</agm-map>
+</ion-content>
