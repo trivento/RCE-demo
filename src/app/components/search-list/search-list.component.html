@@ -1,25 +1,26 @@
 <ion-toolbar>
-    <ion-searchbar color="light" [placeholder]="'zoek ' + objectName" [(ngModel)]="searchString" (ionChange)="search()">
-    </ion-searchbar>
+  <ion-searchbar color="light" [placeholder]="'zoek ' + objectName" [(ngModel)]="searchString" (ionChange)="search()">
+  </ion-searchbar>
 </ion-toolbar>
-<ion-content class="searchlist-wrapper">
-    <ion-grid>
-        <ion-row>
-            <ion-col size="4">
-                <ion-virtual-scroll [items]="filteredValues" approxItemHeight="44px">
-                    <ion-item *virtualItem="let value" (click)="navigateToDetails(value)">
-                        <ion-label>
-                            <div *ngFor="let item of value | keyvalue">
-                              <div *ngIf="hiddenKeys.indexOf(item.key) === -1"><b *ngIf="showKey">{{item.key}}: </b>
-                                {{item.value}}</div>
-                            </div>
-                        </ion-label>
-                    </ion-item>
-                </ion-virtual-scroll>
-            </ion-col>
-            <ion-col size="8">
-                <app-maps [zoom]="7" [geometrieWKTList]="geometrieWKTList"></app-maps>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
-</ion-content>
+
+<ion-grid>
+  <ion-row>
+    <ion-col sizeLg="4" sizeMd="12" sizeSm="12" sizeXs="12">
+      <ion-content>
+        <ion-virtual-scroll [items]="filteredValues" approxItemHeight="44px">
+          <ion-item *virtualItem="let value" (click)="navigateToDetails(value)">
+            <ion-label>
+              <div *ngFor="let item of value | keyvalue">
+                <div *ngIf="hiddenKeys.indexOf(item.key) === -1"><b *ngIf="showKey">{{item.key}}: </b>
+                  {{item.value}}</div>
+              </div>
+            </ion-label>
+          </ion-item>
+        </ion-virtual-scroll>
+      </ion-content>
+    </ion-col>
+    <ion-col sizeLg="8" sizeMd="12" sizeSm="12" sizeXs="12">
+      <app-maps [zoom]="7" [geometrieWKTList]="geometrieWKTList"></app-maps>
+    </ion-col>
+  </ion-row>
+</ion-grid>
