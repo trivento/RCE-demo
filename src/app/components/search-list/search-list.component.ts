@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { SearchService } from '../../services/search/search.service';
-import { UiService } from '../../services/ui/ui.service';
-import { Router } from '@angular/router';
+import { MapsGeoMetrie } from '../../models/rijksmonument.model';
 
 @Component({
   selector: 'app-search-list',
@@ -14,7 +13,7 @@ export class SearchListComponent implements OnChanges {
   searchString: string;
   filteredValues: Array<any>;
   dataLoaded: boolean;
-  @Input() geometrieWKTList: string[] = [];
+  @Input() geometrieWKTList: MapsGeoMetrie[] = [];
   @Output() listItems = new EventEmitter();
   @Output() itemClick = new EventEmitter();
   @Input() objectName: string;

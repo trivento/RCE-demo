@@ -3,6 +3,7 @@ import { UiService } from '../../services/ui/ui.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SearchService } from 'src/app/services/search/search.service';
+import { MapsGeoMetrie } from '../../models/rijksmonument.model';
 
 @Component({
     selector: 'app-rijksmonument-detail',
@@ -12,7 +13,7 @@ import { SearchService } from 'src/app/services/search/search.service';
 export class RijksmonumentDetailComponent implements OnInit, OnDestroy {
     private items = [];
     private item;
-    private geometrieWKT;
+    private geometrieWKT: MapsGeoMetrie = { huidigeNaam: '', geometrieWKT: '' };
     unsubscribe = new Subject<void>();
     private query: string;
 
@@ -25,7 +26,6 @@ export class RijksmonumentDetailComponent implements OnInit, OnDestroy {
             console.log(rm);
             if (rm) {
                 this.item = rm;
-                this.geometrieWKT = this.item.geometrieWKT;
                 if (this.item.cultureelHistorischObject) {
                     this.query = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -38,6 +38,7 @@ export class RijksmonumentDetailComponent implements OnInit, OnDestroy {
                       ?actorEnRol ceo:actor ?architect
                     }`;
                 }
+                this.geometrieWKT = { huidigeNaam: this.item.huidigeNaam, geometrieWKT: this.item.geometrieWKT };
             }
         });
     }

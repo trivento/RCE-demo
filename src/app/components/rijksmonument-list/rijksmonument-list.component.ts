@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { UiService } from 'src/app/services/ui/ui.service';
 import { Router } from '@angular/router';
+import { MapsGeoMetrie } from '../../models/rijksmonument.model';
 
 @Component({
     selector: 'app-rijksmonument-list',
@@ -10,7 +11,7 @@ import { Router } from '@angular/router';
 export class RijksmonumentListComponent {
     total: number = 0;
     listItems: Array<any> = [];
-    geometrieWKTList: Array<string> = [];
+    geometrieWKTList: MapsGeoMetrie[];
     @Input() functieNaam: string = "fabriek";
     filter: string = `${this.functieNaam ? `FILTER CONTAINS(?functieNaam, "${this.functieNaam}")` : ''}`;
     private query = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -43,7 +44,7 @@ SELECT DISTINCT ?cultureelHistorischObject ?functieNaam ?huidigeNaam ?omschrijvi
 
     setGeometrieWKTList(list: any[]) {
         this.geometrieWKTList = list.map(item => {
-            return item.geometrieWKT;
+            return {huidigeNaam: item.huidigeNaam, geometrieWKT: item.geometrieWKT};
         });
     }
 
