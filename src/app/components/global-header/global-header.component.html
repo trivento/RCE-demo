@@ -3,7 +3,7 @@
     <img src="../assets/img/logo-rce-primary.png">
   </div>
   <div class="app-header-menu">
-    <div class="app-header-menu--item" *ngFor="let p of appPages" (click)="openMenu(p.url)">
+    <div [class]="p.url === this.router.url ? 'app-header-menu--item selected-menu-item' : 'app-header-menu--item'" *ngFor="let p of appPages" (click)="openMenu(p.url)">
       <ion-label>
         {{p.title}}
       </ion-label>
