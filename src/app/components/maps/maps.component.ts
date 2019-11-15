@@ -1,4 +1,5 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {MapsGeoMetrie, Markers} from '../../models/rijksmonument.model';
 
 @Component({
     selector: 'app-maps',
@@ -7,12 +8,12 @@ import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core'
 })
 export class MapsComponent implements OnInit, OnChanges {
 
-    @Input() geometrieWKTList: string[];
+    @Input() geometrieWKTList: MapsGeoMetrie[];
     @Input() zoom = 16;
     lat: number;
     lng: number;
     pathList: any = [];
-    markers: { lat: number, lng: number }[] = [];
+    markers: Markers[] = [];
 
     constructor() {
     }
@@ -26,26 +27,30 @@ export class MapsComponent implements OnInit, OnChanges {
         this.setMapsValues();
     }
 
+    clickedMarker(label: string, index: number) {
+        console.log(`clicked the marker: ${label || index}`)
+    }
+
     setMapsValues() {
         this.pathList = [];
         this.markers = [];
 
         this.geometrieWKTList.forEach(geo => {
             switch (true) {
-                case geo.startsWith('POINT') :
-                    const latlon = geo.substring(6, geo.length - 1);
+                case geo.geometrieWKT.startsWith('POINT') :
+                    const latlon = geo.geometrieWKT.substring(6, geo.geometrieWKT.length - 1);
                     this.lat = this.getLat(latlon);
                     this.lng = this.getLng(latlon);
-                    this.markers.push({lat: this.getLat(latlon), lng: this.getLng(latlon)});
+                    this.markers.push({huidigeNaam: geo.huidigeNaam, lat: this.getLat(latlon), lng: this.getLng(latlon)});
                     break;
-                case geo.startsWith('POLYGON') :
-                    const polygon = geo.substring(9, geo.length - 1);
+                case geo.geometrieWKT.startsWith('POLYGON') :
+                    const polygon = geo.geometrieWKT.substring(9, geo.geometrieWKT.length - 1);
                     this.pathList.push(this.transformPolygonToPaths(polygon, 1));
                     this.lat = this.pathList[0][0].lat;
                     this.lng = this.pathList[0][0].lng;
                     break;
-                case geo.startsWith('MULTIPOLYGON'):
-                    const multipolygon = geo.substring(15, geo.length - 3);
+                case geo.geometrieWKT.startsWith('MULTIPOLYGON'):
+                    const multipolygon = geo.geometrieWKT.substring(15, geo.geometrieWKT.length - 3);
                     this.pathList.push(this.transformMultiPolygonToPaths(multipolygon));
                     this.lat = this.pathList[0][0].lat;
                     this.lng = this.pathList[0][0].lng;

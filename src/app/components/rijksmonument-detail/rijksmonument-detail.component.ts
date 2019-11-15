@@ -2,6 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UiService} from '../../services/ui/ui.service';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {MapsGeoMetrie} from '../../models/rijksmonument.model';
 
 @Component({
     selector: 'app-rijksmonument-detail',
@@ -10,7 +11,7 @@ import {takeUntil} from 'rxjs/operators';
 })
 export class RijksmonumentDetailComponent implements OnInit, OnDestroy {
     private item;
-    private geometrieWKT = '';
+    private geometrieWKT: MapsGeoMetrie = {huidigeNaam: '', geometrieWKT: ''};
     unsubscribe = new Subject<void>();
 
     constructor(private uiService: UiService) {
@@ -20,7 +21,7 @@ export class RijksmonumentDetailComponent implements OnInit, OnDestroy {
         this.uiService.activeRijksmonument.pipe(takeUntil(this.unsubscribe)).subscribe(rm => {
             if (rm) {
                 this.item = rm;
-                this.geometrieWKT =  this.item.geometrieWKT;
+                this.geometrieWKT = {huidigeNaam: this.item.huidigeNaam, geometrieWKT: this.item.geometrieWKT};
             }
         });
     }

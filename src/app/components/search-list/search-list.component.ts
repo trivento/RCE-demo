@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {SearchService} from '../../services/search/search.service';
 import {UiService} from '../../services/ui/ui.service';
 import {Router} from '@angular/router';
+import {MapsGeoMetrie} from '../../models/rijksmonument.model';
 
 @Component({
     selector: 'app-search-list',
@@ -13,7 +14,7 @@ export class SearchListComponent implements OnChanges {
     private values: Array<any>;
     searchString: string;
     filteredValues: Array<any>;
-    geometrieWKTList: string[] = [];
+    geometrieWKTList: MapsGeoMetrie[] = [];
     @Output() total = new EventEmitter();
     @Input() objectName: string;
     @Input() query: string;
@@ -49,7 +50,7 @@ export class SearchListComponent implements OnChanges {
 
     setGeometrieWKTList(list: any[]) {
         this.geometrieWKTList = list.map(item => {
-            return item.geometrieWKT;
+            return {huidigeNaam: item.huidigeNaam, geometrieWKT: item.geometrieWKT};
         });
     }
     search(): void {
