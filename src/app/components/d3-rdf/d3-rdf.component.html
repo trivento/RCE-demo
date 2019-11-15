@@ -1,3 +1,8 @@
 <p>
-  d3-rdf works!
+  Klik op een node om deze te openen.
 </p>
+<ion-content #graphContent>
+  <div class="drag-container"></div>
+  <app-d3-graph #D3Graph [options]="options" [nodes]="nodes" [links]="links" (nodeClicked)="nodeClicked($event)">
+  </app-d3-graph>
+</ion-content>

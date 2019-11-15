@@ -1,7 +1,7 @@
-<div *ngIf="nodes && links">
+<div *ngIf="nodes && links && graph">
     <svg #svg id="zoomableSVG" [attr.width]="options.width" [attr.height]="options.height">
         <g [zoomableOf]="svg">
-          <!-- <g [linkVisual]="link" *ngFor="let link of links"></g> -->
+          <g [linkVisual]="link" *ngFor="let link of links"></g>
           <g [nodeVisual]="node" *ngFor="let node of nodes"
               [draggableNode]="node" [draggableInGraph]="graph" (nodeClicked)="nodeClick($event)"></g>
         </g>

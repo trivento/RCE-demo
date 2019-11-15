@@ -92,12 +92,12 @@ export class D3Service {
           textColor: APP_CONFIG.COLORS.ORANGE,
           text: triple[0]
         }))
+        //predicate 
+        links.push(new Link(triple[0], triple[2], triple[1]));
       }
-      //predicate 
-      links.push(new Link(triple[0], triple[2], triple[1]));
       //object
       if (!nodes.find(node => {
-        node.id == triple[0];
+        node.id == triple[2];
       })) {
         nodes.push(new Node({
           id: triple[2],
@@ -108,7 +108,7 @@ export class D3Service {
         }))
       }
     });
-    this.getForceDirectedGraph(nodes, links, { width: 500, height: 500 });
+    return { nodes: nodes, links: links };
   }
 
   /** A method to bind a pan and zoom behaviour to an svg element */
