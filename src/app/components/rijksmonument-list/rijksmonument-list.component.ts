@@ -1,4 +1,6 @@
-import {Component} from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { UiService } from 'src/app/services/ui/ui.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-rijksmonument-list',
@@ -6,14 +8,19 @@ import {Component} from '@angular/core';
     styleUrls: ['./rijksmonument-list.component.scss'],
 })
 export class RijksmonumentListComponent {
+    total: number = 0;
+    listItems: Array<any> = [];
+    geometrieWKTList: Array<string> = [];
+    @Input() functieNaam: string = "fabriek";
+    filter: string = `${this.functieNaam ? `FILTER CONTAINS(?functieNaam, "${this.functieNaam}")` : ''}`;
     private query = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ceo: <https://linkeddata.cultureelerfgoed.nl/def/ceo#>
 SELECT DISTINCT ?cultureelHistorischObject ?functieNaam ?huidigeNaam ?omschrijving ?geometrieWKT WHERE {
  #functieNaam
  ?sub ceo:heeftFunctieNaam ?obj_functie .
- ?obj_functie <http://www.w3.org/2004/02/skos/core#prefLabel> ?functieNaam
- FILTER CONTAINS(?functieNaam, "fabriek")
+ ?obj_functie <http://www.w3.org/2004/02/skos/core#prefLabel> ?functieNaam .
+ ${this.filter}
  #cultureelHistorischObject
  ?sub ceo:heeftBetrekkingOp ?cultureelHistorischObject .
  #huidigeNaam
@@ -30,6 +37,25 @@ SELECT DISTINCT ?cultureelHistorischObject ?functieNaam ?huidigeNaam ?omschrijvi
  ?geometrie <http://www.opengis.net/ont/geosparql#asWKT> ?geometrieWKT
 }`;
 
-    constructor() {
+    constructor(private router: Router,
+        private uiService: UiService) {
+    }
+
+    setGeometrieWKTList(list: any[]) {
+        this.geometrieWKTList = list.map(item => {
+            return item.geometrieWKT;
+        });
+    }
+
+    itemClicked(item) {
+        this.uiService.activeRijksmonument.next(item);
+        this.router.navigate(['detail']);
+    }
+
+
+    onListItems(items: Array<any>) {
+        this.total = items.length;
+        console.log('onListItems')
+        this.setGeometrieWKTList(items);
     }
 }

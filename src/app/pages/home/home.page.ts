@@ -7,6 +7,8 @@ import { Component } from '@angular/core';
 })
 export class HomePage {
   total: number;
+  functieNaam: string;
+  selectedValue: string = "fabriek";
 
   totalUpdate(total: number) {
     this.total = total;

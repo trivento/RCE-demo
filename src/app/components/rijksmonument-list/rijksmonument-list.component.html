@@ -1,2 +1,3 @@
-<app-search-list [query]="query" [objectName]="'rijksmonumenten'" [showKey]=false
+<app-search-list (listItems)="onListItems($event)" (itemClick)="itemClicked($event)" [query]="query"
+    [objectName]="'rijksmonument'" [showKey]=false [geometrieWKTList]="geometrieWKTList" [showMap]=true
     [hiddenKeys]="['cultureelHistorischObject', 'geometrieWKT', 'omschrijving']"></app-search-list>

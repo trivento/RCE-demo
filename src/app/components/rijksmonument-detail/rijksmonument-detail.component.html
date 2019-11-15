@@ -1,13 +1,33 @@
+<ion-toolbar>
+    <ion-buttons slot="start">
+        <ion-back-button defaultHref="home"></ion-back-button>
+        <ion-title><b>{{item.huidigeNaam}}</b></ion-title>
+    </ion-buttons>
+</ion-toolbar>
 <ion-content>
-    <app-maps [geometrieWKTList]="[geometrieWKT]"></app-maps>
-    <ion-item>
-        <ion-label>
-            <h2>
-                {{item?.cultureelHistorischObject}}
-            </h2>
-            <div>
-                {{item?.omschrijving}}
-            </div>
-        </ion-label>
-    </ion-item>
+    <ion-grid *ngIf="item">
+        <ion-row>
+            <ion-col sizeLg="6" sizeMd="12" sizeSm="12" sizeXs="12">
+                <ion-item>
+                    <ion-label text-wrap>
+                        <p>{{item.omschrijving}}</p>
+                    </ion-label>
+                </ion-item>
+            </ion-col>
+            <ion-col sizeLg="6" sizeMd="12" sizeSm="12" sizeXs="12">
+                <app-maps [geometrieWKTList]="[geometrieWKT]"></app-maps>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>
+                <ion-toolbar color=toolbar-secondary>
+                    <ion-title>
+                        {{items.length === 0 ? 'Geen architect gevonden' : items.length > 1 ? 'Architecten' : 'Architect'}}
+                    </ion-title>
+                </ion-toolbar>
+                <app-search-list (listItems)="onListItems($event)" [query]="query" [objectName]="'architecten'"
+                    [showKey]=false [hiddenKeys]="['actorEnRol']" [hideSearch]=true></app-search-list>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
 </ion-content>

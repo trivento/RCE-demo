@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 
 import { HomePage } from './home.page';
-import { CustomComponentsModule } from '../components/custom-components.module';
+import { CustomComponentsModule } from '../../components/custom-components.module';
 
 @NgModule({
   imports: [

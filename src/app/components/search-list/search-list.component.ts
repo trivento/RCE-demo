@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { SearchService } from '../../services/search/search.service';
 import { UiService } from '../../services/ui/ui.service';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-search-list',
@@ -13,21 +13,24 @@ export class SearchListComponent implements OnChanges {
   private values: Array<any>;
   searchString: string;
   filteredValues: Array<any>;
-  geometrieWKTList: string[] = [];
-  @Output() total = new EventEmitter();
+  dataLoaded: boolean;
+  @Input() geometrieWKTList: string[] = [];
+  @Output() listItems = new EventEmitter();
+  @Output() itemClick = new EventEmitter();
   @Input() objectName: string;
   @Input() query: string;
+  @Input() showMap: boolean;
+  @Input() hideSearch: boolean;
   @Input() showKey: boolean;
   @Input() hiddenKeys: Array<String> = [];
 
-  constructor(private searchService: SearchService,
-    private router: Router,
-    private uiService: UiService) {
+  constructor(private searchService: SearchService) {
 
   }
 
   ngOnChanges() {
-    if (this.query) {
+    if (this.query && !this.dataLoaded) {
+      this.dataLoaded = true;
       this.loadData(this.query);
     }
   }
@@ -42,22 +45,15 @@ export class SearchListComponent implements OnChanges {
         });
         return retVal;
       });
-      this.total.emit(this.filteredValues.length);
-      this.setGeometrieWKTList(this.filteredValues);
-      this.uiService.activeRijksmonument.next(this.filteredValues[0]);
+      this.listItems.emit(this.filteredValues);
     });
   }
 
-  setGeometrieWKTList(list: any[]) {
-    this.geometrieWKTList = list.map(item => {
-      return item.geometrieWKT;
-    });
-  }
+
   search(): void {
     if (!this.searchString) {
       this.filteredValues = this.values;
-      this.setGeometrieWKTList(this.filteredValues);
-      this.total.emit(this.filteredValues.length);
+      this.listItems.emit(this.filteredValues);
       return;
     }
     this.filteredValues = this.values.filter(value => {
@@ -71,12 +67,10 @@ export class SearchListComponent implements OnChanges {
       });
       return retVal;
     });
-    this.setGeometrieWKTList(this.filteredValues);
-    this.total.emit(this.filteredValues.length);
+    this.listItems.emit(this.filteredValues);
   }
 
-  navigateToDetails(item) {
-    this.uiService.activeRijksmonument.next(item);
-    this.router.navigate(['detail']);
+  itemClicked(item) {
+    this.itemClick.emit(item);
   }
 }

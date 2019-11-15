@@ -18,7 +18,7 @@ export class MapsComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        this.geometrieWKTList = changes.geometrieWKTList.currentValue;
+        // this.geometrieWKTList = changes.geometrieWKTList.currentValue;
         this.setMapsValues();
     }
 
