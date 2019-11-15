@@ -9,6 +9,12 @@ import {RijksmonumentListComponent} from './rijksmonument-list/rijksmonument-lis
 import {RijksmonumentDetailComponent} from './rijksmonument-detail/rijksmonument-detail.component';
 import {AgmCoreModule} from '@agm/core';
 import {MapsComponent} from './maps/maps.component';
+import { D3RdfComponent } from './d3-rdf/d3-rdf.component';
+import { D3GraphComponent } from './d3-rdf/d3/graph/graph.component';
+import { NodeVisualComponent } from './d3-rdf/d3/node-visual/node-visual.component';
+import { LinkVisualComponent } from './d3-rdf/d3/link-visual/link-visual.component';
+import { ZoomableDirective } from '../directives/d3/zoomable.directive';
+import { DraggableDirective } from '../directives/d3/draggable.directive';
 
 @NgModule({
   imports: [
@@ -23,7 +29,13 @@ import {MapsComponent} from './maps/maps.component';
     SearchListComponent,
     RijksmonumentListComponent,
     RijksmonumentDetailComponent,
-    MapsComponent
+    MapsComponent,
+    D3RdfComponent,
+    D3GraphComponent,
+    NodeVisualComponent,
+    LinkVisualComponent,
+    ZoomableDirective,
+    DraggableDirective,
   ],
   exports: [
     GlobalHeaderComponent,
@@ -31,7 +43,13 @@ import {MapsComponent} from './maps/maps.component';
     SearchListComponent,
     RijksmonumentListComponent,
     RijksmonumentDetailComponent,
-    MapsComponent
+    MapsComponent,
+    D3RdfComponent,
+    D3GraphComponent,
+    NodeVisualComponent,
+    LinkVisualComponent,
+    ZoomableDirective,
+    DraggableDirective,
   ]
 })
 export class CustomComponentsModule { }

@@ -1,0 +1,5 @@
+<svg *ngIf="id" [id]="'svg_donut' + id" [attr.width]="width" [attr.height]="height">
+    <svg:text [attr.transform]="'translate(' + width / 2 + ',' +  height / 2 + ')'" class="node-text" [attr.font-size]="fontSize" [attr.stroke]="textColor" [attr.fill]="textColorFill">
+        <tspan y="0" [attr.dy]="scale == 100 ? '0.2em' : '-0.2em'">{{text}}</tspan>
+      </svg:text>
+</svg>

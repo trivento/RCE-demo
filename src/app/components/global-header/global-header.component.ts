@@ -13,6 +13,10 @@ export class GlobalHeaderComponent {
             title: 'Home',
             url: '/home',
             icon: 'home'
+        },{
+            title: 'Visueel zoeken',
+            url: '/visual-search',
+            icon: 'search'
         }
     ];
 
