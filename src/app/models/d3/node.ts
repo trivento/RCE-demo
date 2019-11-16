@@ -4,10 +4,12 @@ import * as d3 from 'd3';
 
 export interface NodeConfig {
   id: string;
+  entity: any;
   text: string;
   stroke: string;
   fill: string;
   textColor: string;
+  entityType: string;
 }
 // Implementing SimulationNodeDatum interface into our custom Node class
 export class Node implements d3.SimulationNodeDatum {
@@ -22,18 +24,22 @@ export class Node implements d3.SimulationNodeDatum {
 
   id: string;
   text: string;
+  entity: any;
   stroke: string;
   fill: string;
   textColor: string;
   percentage: number;
   scale: number = 1.5;
+  entityType: string;
 
   constructor(config: NodeConfig) {
     this.id = config.id;
-    this.text = config.text;
+    this.entity = config.entity;
     this.stroke = config.stroke || APP_CONFIG.COLORS.WHITE;
     this.fill = config.fill || 'transparent';
     this.textColor = config.textColor || APP_CONFIG.COLORS.WHITE;
+    this.text = config.text;
+    this.entityType = config.entityType;
   }
 
   normal = () => {

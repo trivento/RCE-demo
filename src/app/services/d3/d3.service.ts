@@ -38,21 +38,30 @@ export class D3Service {
     );
   }
 
-  getFactories() {
-    let query = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+  getFactoriesCultHistObject() {
+    const query = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     PREFIX ceo: <https://linkeddata.cultureelerfgoed.nl/def/ceo#>
-    SELECT ?cultureelHistorischObject ?functieNaam ?huidigeNaam WHERE {
+    SELECT ?id ?functieNaam ?huidigeNaam  ?omschrijving ?geometrieWKT WHERE {
       ?sub ceo:heeftFunctieNaam ?obj_functie .
       ?obj_functie <http://www.w3.org/2004/02/skos/core#prefLabel> ?functieNaam
       FILTER CONTAINS(?functieNaam, "fabriek")
-      ?sub ceo:heeftBetrekkingOp ?cultureelHistorischObject .
+      #cultureelHistorischObject
+      ?sub ceo:heeftBetrekkingOp ?id .
       #huidigeNaam
-      ?cultureelHistorischObject ceo:heeftKennisregistratie ?kennisRegistratie .
-      ?kennisRegistratie rdf:type ?typeNaam .
-      FILTER (?typeNaam = ceo:Naam) .
+      ?id ceo:heeftNaam ?naam_obj .
+      ?id ceo:heeftKennisregistratie ?kennisRegistratie .
+      ?kennisRegistratie rdf:type ?type .
+      FILTER (?type = ceo:Naam) .
       ?kennisRegistratie ceo:naam ?huidigeNaam .
+      #omschrijving
+      ?id ceo:heeftOmschrijving ?heeftOmschrijving .
+      ?heeftOmschrijving ceo:omschrijving ?omschrijving .
+      #locatie
+      ?id ceo:heeftGeometrie ?geometrie .
+      ?geometrie <http://www.opengis.net/ont/geosparql#asWKT> ?geometrieWKT
     }`;
+
     let headers: HttpHeaders = new HttpHeaders({
       'Content-type': 'application/x-www-form-urlencoded',
       'X-Api-Key': `${environment.token}`
@@ -68,7 +77,7 @@ export class D3Service {
           rdfResult.head.vars.forEach(variable => {
             //@ts-ignore
             retVal[variable] = item[variable].value;
-            retVal.text = item.huidigeNaam.value + `(${item.functieNaam.value})`;
+            // retVal.text = item.huidigeNaam.value + `(${item.functieNaam.value})`;
           });
           return retVal;
         });
@@ -83,28 +92,33 @@ export class D3Service {
     triples.forEach(triple => {
       //subject
       if (!nodes.find(node => {
-        return node.id == triple[0];
+        return node.id == triple[0].id;
       })) {
         nodes.push(new Node({
-          id: triple[0],
+          id: triple[0].id,
           fill: APP_CONFIG.COLORS.WHITE,
           stroke: APP_CONFIG.COLORS.RED,
           textColor: APP_CONFIG.COLORS.ORANGE,
-          text: triple[0]
+          entity: triple[0],
+          text: triple[0].text,
+          entityType: "Rijksmonument"
         }))
-        //predicate 
-        links.push(new Link(triple[0], triple[2], triple[1]));
       }
+      //predicate 
+      links.push(new Link(triple[0].id, triple[2].id, triple[1]));
+
       //object
       if (!nodes.find(node => {
-        return node.id == triple[2];
+        return node.id == triple[2].id;
       })) {
         nodes.push(new Node({
-          id: triple[2],
+          id: triple[2].id,
           fill: APP_CONFIG.COLORS.WHITE,
-          stroke: APP_CONFIG.COLORS.RED,
-          textColor: APP_CONFIG.COLORS.ORANGE,
-          text: triple[2]
+          stroke: APP_CONFIG.COLORS.PURPLE,
+          textColor: APP_CONFIG.COLORS.RED,
+          entity: triple[2],
+          text: triple[2].text,
+          entityType: ""
         }))
       }
     });

@@ -4,6 +4,8 @@ import { D3Service } from 'src/app/services/d3/d3.service';
 import { D3GraphComponent } from './d3/graph/graph.component';
 import { Subscription } from 'rxjs';
 import { GlobalFunctionsService } from 'src/app/services/global-functions/global-functions.service';
+import { Router } from '@angular/router';
+import { UiService } from 'src/app/services/ui/ui.service';
 
 @Component({
   selector: 'app-d3-rdf',
@@ -20,7 +22,9 @@ export class D3RdfComponent implements AfterViewInit {
   subscriptions: Subscription[];
   triples: Array<any>;
 
-  constructor(private d3Service: D3Service,
+  constructor(private router: Router,
+    private uiService: UiService,
+    private d3Service: D3Service,
     private globalFunctions: GlobalFunctionsService) {
     this.subscriptions = [];
   }
@@ -31,10 +35,26 @@ export class D3RdfComponent implements AfterViewInit {
         width: this.graphContent.nativeElement.clientWidth,
         height: this.graphContent.nativeElement.clientHeight
       }
-      this.d3Service.getFactories().subscribe(data => {
+      this.d3Service.getFactoriesCultHistObject().subscribe(data => {
         this.triples = [];
-        data.forEach((element, index) => {
-          this.triples.push([element.huidigeNaam, "" , index == 0 ? data[data.length-1].huidigeNaam : data[index-1].huidigeNaam]);
+        data.forEach((subject, index) => {
+          const keys = Object.keys(subject);
+          subject.id = subject.id.replace('https://linkeddata.cultureelerfgoed.nl/cho-kennis/id/', '');
+          subject.text = subject.id;
+          keys.forEach(predicate => {
+            if (predicate !== "id" && predicate !== "geometrieWKT" && predicate !== "omschrijving") {
+              let object = {
+                text: subject[predicate],
+                id: subject.id + subject[predicate]
+              }
+              this.triples.push([subject, predicate, object]);
+            }
+          });
+          // for now no links between monumenten
+          // let object = index == 0 ? data[data.length - 1] : data[index - 1];
+          // object.text = object.id;
+          // object.id = object.id.replace('https://linkeddata.cultureelerfgoed.nl/cho-kennis/id/', '');
+          // this.triples.push([subject, "", object]);
         });
         let nodesAndLinks = this.d3Service.createD3(this.triples);
         this.nodes = nodesAndLinks.nodes;
@@ -60,6 +80,10 @@ export class D3RdfComponent implements AfterViewInit {
     }, 100);
   }
   nodeClicked(node) {
-    console.log(node)
+    // TODO make entityType Enum
+    if (node.entityType === "Rijksmonument") {
+      this.uiService.activeRijksmonument.next(node.entity);
+      this.router.navigate(['detail']);
+    }
   }
 }

@@ -1,7 +1,7 @@
 <ion-toolbar>
     <ion-buttons slot="start">
         <ion-back-button defaultHref="home"></ion-back-button>
-        <ion-title><b>{{item.huidigeNaam}}</b></ion-title>
+        <ion-title text-wrap><b>{{item.huidigeNaam}}</b></ion-title>
     </ion-buttons>
 </ion-toolbar>
 <ion-content>
@@ -21,7 +21,7 @@
         <ion-row>
             <ion-col>
                 <ion-toolbar color=toolbar-secondary>
-                    <ion-title>
+                    <ion-title text-wrap>
                         {{items.length === 0 ? 'Geen architect gevonden' : items.length > 1 ? 'Architecten' : 'Architect'}}
                     </ion-title>
                 </ion-toolbar>

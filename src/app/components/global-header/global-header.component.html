@@ -1,6 +1,6 @@
 <div>
   <div class="app-header-logo">
-    <img src="../assets/img/logo-rce-primary.png">
+    <img src="assets/img/logo-rce-primary.png">
   </div>
   <div class="app-header-menu">
     <div [class]="p.url === this.router.url ? 'app-header-menu--item selected-menu-item' : 'app-header-menu--item'" *ngFor="let p of appPages" (click)="openMenu(p.url)">
