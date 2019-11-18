@@ -25,6 +25,9 @@ export class D3RdfComponent implements AfterViewInit {
   triples: Array<any>;
   cultHistObj: any;
   cultHistObjEvents: Array<any>;
+  private values: Array<any>;
+  searchString: string;
+  filteredValues: Array<any>;
 
   constructor(private router: Router,
     private uiService: UiService,
@@ -43,20 +46,37 @@ export class D3RdfComponent implements AfterViewInit {
       }
       this.d3Service.getFactoriesCultHistObject().subscribe(data => {
         this.triples = [];
+        let foundEvents = [];
         data.forEach((subject, index) => {
           const keys = Object.keys(subject);
           subject.uri = subject.id;
           subject.id = subject.id.replace('https://linkeddata.cultureelerfgoed.nl/cho-kennis/id/', '');
           subject.text = subject.id;
-          keys.forEach(predicate => {
-            if (predicate !== "id" && predicate !== "geometrieWKT" && predicate !== "omschrijving") {
-              let object = {
-                text: subject[predicate],
-                id: subject.id + subject[predicate]
-              }
-              this.triples.push([subject, predicate, object]);
+          if (keys.indexOf("startdatum") > -1) {
+            if (foundEvents.indexOf(subject.gebeurtenis.value) === -1) {
+              foundEvents.push(subject.gebeurtenis.value);
+              let eventObject: any = {};
+              eventObject.id = eventObject.uri = `${subject.id}_gebeurtenissen`;
+              eventObject.text = "Gebeurtenissen";
+
+              // this.triples.push([subject, "gebeurtenissen", eventObject]);
+              // this.triples.push([eventObject, "startdatum", {
+              //   id: `${subject.gebeurtenis.value}_startdatum`,
+              //   uri: `${subject.gebeurtenis.value}_startdatum`,
+              //   text: `${subject.startdatum.value}`
+              // }]);
             }
-          });
+          } else {
+            keys.forEach(predicate => {
+              if (predicate !== "id" && predicate !== "geometrieWKT" && predicate !== "omschrijving") {
+                let object = {
+                  text: subject[predicate],
+                  id: subject.id + subject[predicate]
+                }
+                this.triples.push([subject, predicate, object]);
+              }
+            });
+          }
           // for now no links between monumenten
           // let object = index == 0 ? data[data.length - 1] : data[index - 1];
           // object.text = object.id;
@@ -90,48 +110,66 @@ export class D3RdfComponent implements AfterViewInit {
   nodeClicked(node) {
     // TODO make entityType Enum
     if (node.entityType === "Rijksmonument") {
-      this.cultHistObj = node;
-      this.cultHistObjEvents = [];
-      console.log(node)
-      const query = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-      PREFIX ceo: <https://linkeddata.cultureelerfgoed.nl/def/ceo#>
-      PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-      SELECT * WHERE {
-        ?gebeurtenis ceo:heeftBetrekkingOp <${node.entity.uri}> .
-        ?gebeurtenis rdf:type ?typeNaam .
-        FILTER (?typeNaam = ceo:Gebeurtenis) .
-        ?gebeurtenis ceo:heeftGebeurtenisNaam ?gebeurtenisNaamObject .
-        ?gebeurtenisNaamObject skos:prefLabel ?gebeurtenisNaam .
-        
-        ?gebeurtenis ceo:heeftDatering  ?datering .
-        ?datering ceo:heeftTijdvak  ?tijdvak .
-        ?tijdvak ceo:startdatum  ?startdatum .
-      #  OPTIONAL {?gebeurtenis ceo:heeftDatering  ?datering .
-      #  ?datering ceo:heeftTijdvak  ?tijdvak .
-      #  ?tijdvak ceo:startdatum  ?startdatum .} .
-      } 
-      `;
-      this.searchService.postRCEQuery(query).subscribe(data => {
-        console.log(data);
-        data.results.bindings.forEach(event => {
-          const node = new Node(
-            {
-              id: event.datering.value,
-              uri: event.datering.value,
-              fill: APP_CONFIG.COLORS.WHITE,
-              stroke: APP_CONFIG.COLORS.RED,
-              textColor: APP_CONFIG.COLORS.ORANGE,
-              entity: event,
-              text: `${event.startdatum.value}: ${event.gebeurtenisNaam.value}`,
-              entityType: "Event"
-            }
-          )
-          this.cultHistObjEvents.push(node);
-        });
-      });
-      // this.uiService.activeRijksmonument.next(node.entity);
-      // this.router.navigate(['detail']);
+      // this.cultHistObj = node;
+      // this.cultHistObjEvents = [];
+      // console.log(node)
+      // const query = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+      // PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      // PREFIX ceo: <https://linkeddata.cultureelerfgoed.nl/def/ceo#>
+      // PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+      // SELECT * WHERE {
+      //   ?gebeurtenis ceo:heeftBetrekkingOp <${node.entity.uri}> .
+      //   ?gebeurtenis rdf:type ?typeNaam .
+      //   FILTER (?typeNaam = ceo:Gebeurtenis) .
+      //   ?gebeurtenis ceo:heeftGebeurtenisNaam ?gebeurtenisNaamObject .
+      //   ?gebeurtenisNaamObject skos:prefLabel ?gebeurtenisNaam .
+
+      //   ?gebeurtenis ceo:heeftDatering  ?datering .
+      //   ?datering ceo:heeftTijdvak  ?tijdvak .
+      //   ?tijdvak ceo:startdatum  ?startdatum .
+      // #  OPTIONAL {?gebeurtenis ceo:heeftDatering  ?datering .
+      // #  ?datering ceo:heeftTijdvak  ?tijdvak .
+      // #  ?tijdvak ceo:startdatum  ?startdatum .} .
+      // } 
+      // `;
+      // this.searchService.postRCEQuery(query).subscribe(data => {
+      //   console.log(data);
+      //   data.results.bindings.forEach(event => {
+      //     const node = new Node(
+      //       {
+      //         id: event.datering.value,
+      //         uri: event.datering.value,
+      //         fill: APP_CONFIG.COLORS.WHITE,
+      //         stroke: APP_CONFIG.COLORS.ORANGE,
+      //         textColor: APP_CONFIG.COLORS.RED,
+      //         entity: event,
+      //         text: `${event.startdatum.value}: ${event.gebeurtenisNaam.value}`,
+      //         entityType: "Event"
+      //       }
+      //     )
+      //     this.cultHistObjEvents.push(node);
+      //   });
+      // });
+      this.uiService.activeRijksmonument.next(node.entity);
+      this.router.navigate(['detail']);
     }
+  }
+
+  search(): void {
+    // if (!this.searchString) {
+    //   this.filteredValues = this.cultHistObjEvents;
+    //   return;
+    // }
+    // this.filteredValues = this.nodes.filter(value => {
+    //   let retVal = false;
+    //   console.log(value)
+    //   Object.keys(value).forEach(key => {
+    //     if (value[key].toLowerCase().indexOf(this.searchString.toLowerCase()) > -1) {
+    //       retVal = true;
+    //     }
+    //   });
+    //   return retVal;
+    // });
+    // console.log(this.filteredValues);
   }
 }

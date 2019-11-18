@@ -1,10 +1,12 @@
 <div>
-  <p>
-    Klik op een rode node om de historische geburtenissen te bekijken. U kunt ook in- en uitzoomen.<br><br>
-  </p>
+  <!-- <ion-toolbar [hidden]="hideSearch">
+    <ion-searchbar color="light" placeholder="zoek rijksmonument" [(ngModel)]="searchString" (ionChange)="search()">
+    </ion-searchbar>
+  </ion-toolbar> -->
   <div *ngIf="cultHistObj" class="cult-hist-header">
-      <span><b>{{cultHistObj.entity.huidigeNaam}}</b> met functie <b>{{cultHistObj.entity.functieNaam}}</b> heeft
-          {{cultHistObjEvents.length > 0 ? cultHistObjEvents.length > 1 ? ' deze historische gebeurtenissen:' : ' deze historische gebeurtenis:' : ' geen historische gebeurtenissen.' }} </span>
+    <span><b>{{cultHistObj.entity.huidigeNaam}}</b> met functie <b>{{cultHistObj.entity.functieNaam}}</b> heeft
+      {{cultHistObjEvents.length > 0 ? cultHistObjEvents.length > 1 ? ' deze historische gebeurtenissen:' : ' deze historische gebeurtenis:' : ' geen historische gebeurtenissen.' }}
+    </span>
   </div>
   <ion-grid>
     <ion-row justify-content-between>
@@ -16,7 +18,6 @@
   </ion-grid>
 </div>
 <ion-content #graphContent>
-  <div class="drag-container"></div>
   <app-d3-graph #D3Graph [options]="options" [nodes]="nodes" [links]="links" (nodeClicked)="nodeClicked($event)">
   </app-d3-graph>
 </ion-content>

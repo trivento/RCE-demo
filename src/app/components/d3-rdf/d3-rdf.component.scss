@@ -1,12 +1,15 @@
 :host {
+    ion-content {
+        border: 1px solid var(--ion-color-primary);
+    }
     .cult-hist-header {
         text-align: center;
-        background-color:var(--ion-color-toolbar-secondary);
+        background-color: var(--ion-color-toolbar-secondary);
         padding: 10px;
     }
     .event-node {
         color:white;
-        background-color:var(--ion-color-primary);
+        background-color: var(--ion-color-primary);
         width: auto;
         font-size: 0.8em;
         align-content: center;

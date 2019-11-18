@@ -4,14 +4,9 @@
     transition: stroke-width 0.1s ease-out, fill 0.1s ease-out, stroke 0.1s ease-out;
 }
 
-.node-points {
+.node-text {
+    stroke-width: 0.6px;
     cursor: pointer;
     text-anchor: middle;
     font-weight: bold;
-}
-
-.node-text {
-    cursor: pointer;
-    text-anchor: middle;
-    font-weight: normal;
 }

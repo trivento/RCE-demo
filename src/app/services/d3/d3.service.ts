@@ -59,8 +59,44 @@ export class D3Service {
       ?heeftOmschrijving ceo:omschrijving ?omschrijving .
       #locatie
       ?id ceo:heeftGeometrie ?geometrie .
-      ?geometrie <http://www.opengis.net/ont/geosparql#asWKT> ?geometrieWKT
+      ?geometrie <http://www.opengis.net/ont/geosparql#asWKT> ?geometrieWKT .
     }`;
+    // const query = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    // PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    // PREFIX ceo: <https://linkeddata.cultureelerfgoed.nl/def/ceo#>
+    // PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+    // SELECT ?id ?functieNaam ?huidigeNaam  ?omschrijving ?geometrieWKT ?gebeurtenis ?gebeurtenisNaam ?startdatum WHERE {
+    //   ?sub ceo:heeftFunctieNaam ?obj_functie .
+    //   ?obj_functie <http://www.w3.org/2004/02/skos/core#prefLabel> ?functieNaam
+    //   FILTER CONTAINS(?functieNaam, "fabriek")
+    //   #cultureelHistorischObject
+    //   ?sub ceo:heeftBetrekkingOp ?id .
+    //   #huidigeNaam
+    //   ?id ceo:heeftNaam ?naam_obj .
+    //   ?id ceo:heeftKennisregistratie ?kennisRegistratie .
+    //   ?kennisRegistratie rdf:type ?type .
+    //   FILTER (?type = ceo:Naam) .
+    //   ?kennisRegistratie ceo:naam ?huidigeNaam .
+    //   #omschrijving
+    //   ?id ceo:heeftOmschrijving ?heeftOmschrijving .
+    //   ?heeftOmschrijving ceo:omschrijving ?omschrijving .
+    //   #locatie
+    //   ?id ceo:heeftGeometrie ?geometrie .
+    //   ?geometrie <http://www.opengis.net/ont/geosparql#asWKT> ?geometrieWKT .
+    //   OPTIONAL { 
+    //       ?gebeurtenis ceo:heeftBetrekkingOp ?id .
+    //       OPTIONAL {
+    //         ?gebeurtenis rdf:type ?typeNaam .
+    //         FILTER (?typeNaam = ceo:Gebeurtenis) .
+    //         ?gebeurtenis ceo:heeftGebeurtenisNaam ?gebeurtenisNaamObject .
+    //         ?gebeurtenisNaamObject skos:prefLabel ?gebeurtenisNaam .
+            
+    //         ?gebeurtenis ceo:heeftDatering  ?datering .
+    //         ?datering ceo:heeftTijdvak  ?tijdvak .
+    //         ?tijdvak ceo:startdatum  ?startdatum .
+    //       }
+    //     }
+    // }`;
 
     let headers: HttpHeaders = new HttpHeaders({
       'Content-type': 'application/x-www-form-urlencoded',
@@ -75,8 +111,11 @@ export class D3Service {
         return rdfResult.results.bindings.map(item => {
           let retVal: any = {};
           rdfResult.head.vars.forEach(variable => {
-            //@ts-ignore
-            retVal[variable] = item[variable].value;
+             //@ts-ignore
+            if(item[variable]) {
+               //@ts-ignore
+              retVal[variable] = item[variable].value;
+            }
           });
           return retVal;
         });
@@ -96,9 +135,9 @@ export class D3Service {
         nodes.push(new Node({
           id: triple[0].id,
           uri: triple[0].uri,
-          fill: APP_CONFIG.COLORS.WHITE,
+          fill: APP_CONFIG.COLORS.RED,
           stroke: APP_CONFIG.COLORS.RED,
-          textColor: APP_CONFIG.COLORS.ORANGE,
+          textColor: APP_CONFIG.COLORS.BLUE,
           entity: triple[0],
           text: triple[0].text,
           entityType: "Rijksmonument"
@@ -114,9 +153,9 @@ export class D3Service {
         nodes.push(new Node({
           id: triple[2].id,
           uri: triple[2].uri,
-          fill: APP_CONFIG.COLORS.WHITE,
-          stroke: APP_CONFIG.COLORS.PURPLE,
-          textColor: APP_CONFIG.COLORS.RED,
+          fill: APP_CONFIG.COLORS.ORANGE,
+          stroke: APP_CONFIG.COLORS.ORANGE,
+          textColor: APP_CONFIG.COLORS.BLUE,
           entity: triple[2],
           text: triple[2].text,
           entityType: ""
