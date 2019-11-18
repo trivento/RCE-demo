@@ -4,6 +4,7 @@ import * as d3 from 'd3';
 
 export interface NodeConfig {
   id: string;
+  uri: string;
   entity: any;
   text: string;
   stroke: string;
@@ -23,6 +24,7 @@ export class Node implements d3.SimulationNodeDatum {
   fy?: number | null;
 
   id: string;
+  uri: string;
   text: string;
   entity: any;
   stroke: string;

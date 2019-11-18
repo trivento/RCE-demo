@@ -1,6 +1,20 @@
-<p>
-  Klik op een rode node om deze te openen. U kunt ook in- en uitzoomen.
-</p>
+<div>
+  <p>
+    Klik op een rode node om de historische geburtenissen te bekijken. U kunt ook in- en uitzoomen.<br><br>
+  </p>
+  <div *ngIf="cultHistObj" class="cult-hist-header">
+      <span><b>{{cultHistObj.entity.huidigeNaam}}</b> met functie <b>{{cultHistObj.entity.functieNaam}}</b> heeft
+          {{cultHistObjEvents.length > 0 ? cultHistObjEvents.length > 1 ? ' deze historische gebeurtenissen:' : ' deze historische gebeurtenis:' : ' geen historische gebeurtenissen.' }} </span>
+  </div>
+  <ion-grid>
+    <ion-row justify-content-between>
+      <ion-col col-1 class="event-node" *ngFor="let node of cultHistObjEvents">
+        <b>{{node?.entity.startdatum.value}}</b><br>
+        {{node?.entity.gebeurtenisNaam.value}}
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</div>
 <ion-content #graphContent>
   <div class="drag-container"></div>
   <app-d3-graph #D3Graph [options]="options" [nodes]="nodes" [links]="links" (nodeClicked)="nodeClicked($event)">

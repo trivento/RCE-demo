@@ -77,7 +77,6 @@ export class D3Service {
           rdfResult.head.vars.forEach(variable => {
             //@ts-ignore
             retVal[variable] = item[variable].value;
-            // retVal.text = item.huidigeNaam.value + `(${item.functieNaam.value})`;
           });
           return retVal;
         });
@@ -96,6 +95,7 @@ export class D3Service {
       })) {
         nodes.push(new Node({
           id: triple[0].id,
+          uri: triple[0].uri,
           fill: APP_CONFIG.COLORS.WHITE,
           stroke: APP_CONFIG.COLORS.RED,
           textColor: APP_CONFIG.COLORS.ORANGE,
@@ -113,6 +113,7 @@ export class D3Service {
       })) {
         nodes.push(new Node({
           id: triple[2].id,
+          uri: triple[2].uri,
           fill: APP_CONFIG.COLORS.WHITE,
           stroke: APP_CONFIG.COLORS.PURPLE,
           textColor: APP_CONFIG.COLORS.RED,
