@@ -19,7 +19,7 @@ import { D3Service } from './services/d3/d3.service';
   entryComponents: [],
   imports: [
     BrowserModule,
-    AgmCoreModule.forRoot({apiKey: 'AIzaSyDYUV7xng7k_I61cRhQdySGI8td8DCbUsE'}),
+    AgmCoreModule.forRoot({apiKey: ''}),
     IonicModule.forRoot({animated: false}),
     HttpClientModule,
     AppRoutingModule
