@@ -69,8 +69,8 @@ export class D3RdfComponent implements AfterViewInit {
             if (foundArchitects.indexOf(subject.id + subject.architect) === -1) {
               foundArchitects.push(subject.id + subject.architect);
               this.triples.push([subject, "heeftArchitect", {
-                id: `${subject.gebeurtenis}`,
-                uri: `${subject.gebeurtenis}`,
+                id: `${subject.id + subject.architect}`,
+                uri: `${subject.id + subject.architect}`,
                 text: `${subject.architect}`
               }]);
             }
