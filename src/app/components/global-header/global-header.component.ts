@@ -9,11 +9,11 @@ import { Router } from '@angular/router';
 export class GlobalHeaderComponent {
     public appPages = [
         {
-            title: 'Home',
+            title: 'Lijst weergave',
             url: '/home',
             icon: 'home'
         }, {
-            title: 'Visueel zoeken',
+            title: 'Node weergave',
             url: '/visual-search',
             icon: 'search'
         }

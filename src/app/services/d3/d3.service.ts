@@ -42,7 +42,8 @@ export class D3Service {
     const query = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     PREFIX ceo: <https://linkeddata.cultureelerfgoed.nl/def/ceo#>
-    SELECT ?id ?functieNaam ?huidigeNaam  ?omschrijving ?geometrieWKT WHERE {
+    PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+    SELECT ?id ?functieNaam ?huidigeNaam  ?omschrijving ?geometrieWKT ?gebeurtenis ?gebeurtenisNaam ?startdatum WHERE {
       ?sub ceo:heeftFunctieNaam ?obj_functie .
       ?obj_functie <http://www.w3.org/2004/02/skos/core#prefLabel> ?functieNaam
       FILTER CONTAINS(?functieNaam, "fabriek")
@@ -60,42 +61,54 @@ export class D3Service {
       #locatie
       ?id ceo:heeftGeometrie ?geometrie .
       ?geometrie <http://www.opengis.net/ont/geosparql#asWKT> ?geometrieWKT .
+      OPTIONAL { 
+        ?gebeurtenis ceo:heeftBetrekkingOp ?id .
+        OPTIONAL {
+          ?gebeurtenis rdf:type ?typeNaam .
+          FILTER (?typeNaam = ceo:Gebeurtenis) .
+          ?gebeurtenis ceo:heeftGebeurtenisNaam ?gebeurtenisNaamObject .
+          ?gebeurtenisNaamObject skos:prefLabel ?gebeurtenisNaam .
+          
+          ?gebeurtenis ceo:heeftDatering  ?datering .
+          ?datering ceo:heeftTijdvak  ?tijdvak .
+          ?tijdvak ceo:startdatum  ?startdatum .
+        }
+      }
     }`;
+
     // const query = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     // PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     // PREFIX ceo: <https://linkeddata.cultureelerfgoed.nl/def/ceo#>
     // PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-    // SELECT ?id ?functieNaam ?huidigeNaam  ?omschrijving ?geometrieWKT ?gebeurtenis ?gebeurtenisNaam ?startdatum WHERE {
+    // SELECT ?functieNaam ?huidigeNaam  ?omschrijving ?geometrieWKT ?gebeurtenis ?gebeurtenisNaam ?startdatum WHERE {
     //   ?sub ceo:heeftFunctieNaam ?obj_functie .
-    //   ?obj_functie <http://www.w3.org/2004/02/skos/core#prefLabel> ?functieNaam
-    //   FILTER CONTAINS(?functieNaam, "fabriek")
-    //   #cultureelHistorischObject
-    //   ?sub ceo:heeftBetrekkingOp ?id .
+    //   ?obj_functie <http://www.w3.org/2004/02/skos/core#prefLabel> ?functieNaam .
+    //   ?sub ceo:heeftBetrekkingOp <https://linkeddata.cultureelerfgoed.nl/cho-kennis/id/rijksmonument/73507> .
     //   #huidigeNaam
-    //   ?id ceo:heeftNaam ?naam_obj .
-    //   ?id ceo:heeftKennisregistratie ?kennisRegistratie .
+    //   <https://linkeddata.cultureelerfgoed.nl/cho-kennis/id/rijksmonument/73507>  ceo:heeftNaam ?naam_obj .
+    //   <https://linkeddata.cultureelerfgoed.nl/cho-kennis/id/rijksmonument/73507>  ceo:heeftKennisregistratie ?kennisRegistratie .
     //   ?kennisRegistratie rdf:type ?type .
     //   FILTER (?type = ceo:Naam) .
     //   ?kennisRegistratie ceo:naam ?huidigeNaam .
     //   #omschrijving
-    //   ?id ceo:heeftOmschrijving ?heeftOmschrijving .
+    //   <https://linkeddata.cultureelerfgoed.nl/cho-kennis/id/rijksmonument/73507>  ceo:heeftOmschrijving ?heeftOmschrijving .
     //   ?heeftOmschrijving ceo:omschrijving ?omschrijving .
     //   #locatie
-    //   ?id ceo:heeftGeometrie ?geometrie .
+    //   <https://linkeddata.cultureelerfgoed.nl/cho-kennis/id/rijksmonument/73507>  ceo:heeftGeometrie ?geometrie .
     //   ?geometrie <http://www.opengis.net/ont/geosparql#asWKT> ?geometrieWKT .
     //   OPTIONAL { 
-    //       ?gebeurtenis ceo:heeftBetrekkingOp ?id .
-    //       OPTIONAL {
-    //         ?gebeurtenis rdf:type ?typeNaam .
-    //         FILTER (?typeNaam = ceo:Gebeurtenis) .
-    //         ?gebeurtenis ceo:heeftGebeurtenisNaam ?gebeurtenisNaamObject .
-    //         ?gebeurtenisNaamObject skos:prefLabel ?gebeurtenisNaam .
-            
-    //         ?gebeurtenis ceo:heeftDatering  ?datering .
-    //         ?datering ceo:heeftTijdvak  ?tijdvak .
-    //         ?tijdvak ceo:startdatum  ?startdatum .
-    //       }
+    //     ?gebeurtenis ceo:heeftBetrekkingOp <https://linkeddata.cultureelerfgoed.nl/cho-kennis/id/rijksmonument/73507>  .
+    //     OPTIONAL {
+    //       ?gebeurtenis rdf:type ?typeNaam .
+    //       FILTER (?typeNaam = ceo:Gebeurtenis) .
+    //       ?gebeurtenis ceo:heeftGebeurtenisNaam ?gebeurtenisNaamObject .
+    //       ?gebeurtenisNaamObject skos:prefLabel ?gebeurtenisNaam .
+
+    //       ?gebeurtenis ceo:heeftDatering  ?datering .
+    //       ?datering ceo:heeftTijdvak  ?tijdvak .
+    //       ?tijdvak ceo:startdatum  ?startdatum .
     //     }
+    //   }
     // }`;
 
     let headers: HttpHeaders = new HttpHeaders({
@@ -111,9 +124,9 @@ export class D3Service {
         return rdfResult.results.bindings.map(item => {
           let retVal: any = {};
           rdfResult.head.vars.forEach(variable => {
-             //@ts-ignore
-            if(item[variable]) {
-               //@ts-ignore
+            //@ts-ignore
+            if (item[variable]) {
+              //@ts-ignore
               retVal[variable] = item[variable].value;
             }
           });
@@ -128,15 +141,19 @@ export class D3Service {
     let links: Link[] = [];
 
     triples.forEach(triple => {
+      if (triple[1] === "gebeurtenis") {
+        return;
+      }
       //subject
       if (!nodes.find(node => {
         return node.id == triple[0].id;
       })) {
+        let nodeColorSubject = APP_CONFIG.COLORS.RED;
         nodes.push(new Node({
           id: triple[0].id,
           uri: triple[0].uri,
-          fill: APP_CONFIG.COLORS.RED,
-          stroke: APP_CONFIG.COLORS.RED,
+          fill: nodeColorSubject,
+          stroke: nodeColorSubject,
           textColor: APP_CONFIG.COLORS.BLUE,
           entity: triple[0],
           text: triple[0].text,
@@ -144,17 +161,25 @@ export class D3Service {
         }))
       }
       //predicate 
+      let linktext = triple[1]
+      if (linktext === "startdatum") {
+        linktext = "";
+      }
       links.push(new Link(triple[0].id, triple[2].id, triple[1]));
 
       //object
       if (!nodes.find(node => {
         return node.id == triple[2].id;
       })) {
+        let nodeColorObject = APP_CONFIG.COLORS.ORANGE;
+        if (triple[1] === "heeftGebeurtenissen" || triple[1] === "startdatum") {
+          nodeColorObject = APP_CONFIG.COLORS.BLUE;
+        }
         nodes.push(new Node({
           id: triple[2].id,
           uri: triple[2].uri,
-          fill: APP_CONFIG.COLORS.ORANGE,
-          stroke: APP_CONFIG.COLORS.ORANGE,
+          fill: nodeColorObject,
+          stroke: nodeColorObject,
           textColor: APP_CONFIG.COLORS.BLUE,
           entity: triple[2],
           text: triple[2].text,

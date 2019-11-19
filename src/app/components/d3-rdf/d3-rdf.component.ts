@@ -47,26 +47,32 @@ export class D3RdfComponent implements AfterViewInit {
       this.d3Service.getFactoriesCultHistObject().subscribe(data => {
         this.triples = [];
         let foundEvents = [];
+        let foundObjects = [];
         data.forEach((subject, index) => {
           const keys = Object.keys(subject);
+          // subject.id = "https://linkeddata.cultureelerfgoed.nl/cho-kennis/id/rijksmonument/73507";
           subject.uri = subject.id;
           subject.id = subject.id.replace('https://linkeddata.cultureelerfgoed.nl/cho-kennis/id/', '');
           subject.text = subject.id;
-          if (keys.indexOf("startdatum") > -1) {
-            if (foundEvents.indexOf(subject.gebeurtenis.value) === -1) {
-              foundEvents.push(subject.gebeurtenis.value);
-              let eventObject: any = {};
-              eventObject.id = eventObject.uri = `${subject.id}_gebeurtenissen`;
-              eventObject.text = "Gebeurtenissen";
 
-              // this.triples.push([subject, "gebeurtenissen", eventObject]);
-              // this.triples.push([eventObject, "startdatum", {
-              //   id: `${subject.gebeurtenis.value}_startdatum`,
-              //   uri: `${subject.gebeurtenis.value}_startdatum`,
-              //   text: `${subject.startdatum.value}`
-              // }]);
-            }
+          let eventObject: any = {};
+          eventObject.id = eventObject.uri = `${subject.id}_gebeurtenissen`;
+          eventObject.text = "Gebeurtenissen";
+          if (foundEvents.indexOf(eventObject.id) === -1) {
+            foundEvents.push(eventObject.id);
+            this.triples.push([subject, "heeftGebeurtenissen", eventObject]);
+          }
+          if (keys.indexOf("startdatum") > -1) {
+            this.triples.push([eventObject, "startdatum", {
+              id: `${subject.gebeurtenis}`,
+              uri: `${subject.gebeurtenis}`,
+              text: ` ${subject.gebeurtenisNaam} op ${subject.startdatum}`
+            }]);
           } else {
+            if (subject.gebeurtenis && foundObjects.indexOf(subject.id) > -1) {
+              return;
+            }
+            foundObjects.push(subject.id);
             keys.forEach(predicate => {
               if (predicate !== "id" && predicate !== "geometrieWKT" && predicate !== "omschrijving") {
                 let object = {
