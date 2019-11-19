@@ -27,13 +27,26 @@ export class RijksmonumentDetailComponent implements OnInit, OnDestroy {
                     this.query = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                     PREFIX ceo: <https://linkeddata.cultureelerfgoed.nl/def/ceo#>
-                    SELECT ?architect ?actorEnRol WHERE {
+                    SELECT DISTINCT ?architect WHERE {
                       <${this.item.cultureelHistorischObject}> ceo:heeftGebeurtenis ?obj .
                       ?obj ceo:heeftActorEnRol ?actorEnRol .
                       ?actorEnRol ceo:rol ?rol
                       FILTER CONTAINS(?rol, "architect")
                       ?actorEnRol ceo:actor ?architect
                     }`;
+                } else {
+                    if (this.item.uri) {
+                        this.query = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                        PREFIX ceo: <https://linkeddata.cultureelerfgoed.nl/def/ceo#>
+                        SELECT DISTINCT ?architect WHERE {
+                          <${this.item.uri}> ceo:heeftGebeurtenis ?obj .
+                          ?obj ceo:heeftActorEnRol ?actorEnRol .
+                          ?actorEnRol ceo:rol ?rol
+                          FILTER CONTAINS(?rol, "architect")
+                          ?actorEnRol ceo:actor ?architect
+                        }`;
+                    } 
                 }
                 this.geometrieWKT = { huidigeNaam: this.item.huidigeNaam, geometrieWKT: this.item.geometrieWKT };
             }

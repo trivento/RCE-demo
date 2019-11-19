@@ -47,6 +47,7 @@ export class D3RdfComponent implements AfterViewInit {
       this.d3Service.getFactoriesCultHistObject().subscribe(data => {
         this.triples = [];
         let foundEvents = [];
+        let foundArchitects = [];
         let foundObjects = [];
         data.forEach((subject, index) => {
           const keys = Object.keys(subject);
@@ -55,26 +56,38 @@ export class D3RdfComponent implements AfterViewInit {
           subject.id = subject.id.replace('https://linkeddata.cultureelerfgoed.nl/cho-kennis/id/', '');
           subject.text = subject.id;
 
-          let eventObject: any = {};
-          eventObject.id = eventObject.uri = `${subject.id}_gebeurtenissen`;
-          eventObject.text = "Gebeurtenissen";
-          if (foundEvents.indexOf(eventObject.id) === -1) {
-            foundEvents.push(eventObject.id);
-            this.triples.push([subject, "heeftGebeurtenissen", eventObject]);
-          }
-          if (keys.indexOf("startdatum") > -1) {
-            this.triples.push([eventObject, "startdatum", {
-              id: `${subject.gebeurtenis}`,
-              uri: `${subject.gebeurtenis}`,
-              text: ` ${subject.gebeurtenisNaam} op ${subject.startdatum}`
-            }]);
+          // let eventObject: any = {};
+          // eventObject.id = eventObject.uri = `${subject.id}_gebeurtenissen`;
+          // eventObject.text = "Gebeurtenissen";
+          // if (foundEvents.indexOf(eventObject.id) === -1) {
+          //   foundEvents.push(eventObject.id);
+          //   this.triples.push([subject, "heeftGebeurtenissen", eventObject]);
+          // }
+          const isArchitect = keys.indexOf("architect") > -1;
+          const isEvent = keys.indexOf("startdatum") > -1;
+          if (isArchitect) {
+            if (foundArchitects.indexOf(subject.id + subject.architect) === -1) {
+              foundArchitects.push(subject.id + subject.architect);
+              this.triples.push([subject, "heeftArchitect", {
+                id: `${subject.gebeurtenis}`,
+                uri: `${subject.gebeurtenis}`,
+                text: `${subject.architect}`
+              }]);
+            }
+          } 
+          if (isEvent) {
+              this.triples.push([subject, "heeftGebeurtenis", {
+                id: `${subject.gebeurtenis}`,
+                uri: `${subject.gebeurtenis}`,
+                text: ` ${subject.gebeurtenisNaam} op ${subject.startdatum}`
+              }]);
           } else {
             if (subject.gebeurtenis && foundObjects.indexOf(subject.id) > -1) {
               return;
             }
             foundObjects.push(subject.id);
             keys.forEach(predicate => {
-              if (predicate !== "id" && predicate !== "geometrieWKT" && predicate !== "omschrijving") {
+              if (predicate !== "id" && predicate !== "geometrieWKT" && predicate !== "omschrijving" && predicate !== "architect") {
                 let object = {
                   text: subject[predicate],
                   id: subject.id + subject[predicate]

@@ -43,7 +43,7 @@ export class D3Service {
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     PREFIX ceo: <https://linkeddata.cultureelerfgoed.nl/def/ceo#>
     PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-    SELECT ?id ?functieNaam ?huidigeNaam  ?omschrijving ?geometrieWKT ?gebeurtenis ?gebeurtenisNaam ?startdatum WHERE {
+    SELECT ?id ?functieNaam ?huidigeNaam  ?omschrijving ?geometrieWKT ?gebeurtenis ?gebeurtenisNaam ?startdatum ?architect WHERE {
       ?sub ceo:heeftFunctieNaam ?obj_functie .
       ?obj_functie <http://www.w3.org/2004/02/skos/core#prefLabel> ?functieNaam
       FILTER CONTAINS(?functieNaam, "fabriek")
@@ -74,7 +74,18 @@ export class D3Service {
           ?tijdvak ceo:startdatum  ?startdatum .
         }
       }
+      OPTIONAL { 
+        ?gebeurtenis2 ceo:heeftBetrekkingOp ?id .
+        ?gebeurtenis2 ceo:heeftActorEnRol ?actorEnRol .
+        ?actorEnRol ceo:rol ?rol .
+        FILTER CONTAINS(?rol, "architect")
+        ?actorEnRol ceo:actor ?architect .
+      }
     }`;
+    // ?gebeurtenis ceo:heeftActorEnRol ?actorEnRol .
+    // ?actorEnRol ceo:rol ?obj .
+    // FILTER CONTAINS(?obj, "architect")
+    // ?sub ceo:actor ?architect .
 
     // const query = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     // PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -165,15 +176,21 @@ export class D3Service {
       if (linktext === "startdatum") {
         linktext = "";
       }
-      links.push(new Link(triple[0].id, triple[2].id, triple[1]));
+      links.push(new Link(triple[0].id, triple[2].id, linktext));
 
       //object
       if (!nodes.find(node => {
         return node.id == triple[2].id;
       })) {
         let nodeColorObject = APP_CONFIG.COLORS.ORANGE;
-        if (triple[1] === "heeftGebeurtenissen" || triple[1] === "startdatum") {
+        if (triple[1] === "heeftGebeurtenissen") {
+          nodeColorObject = APP_CONFIG.COLORS.LIGHT_GREY;
+        }
+        if (triple[1] === "heeftGebeurtenis") {
           nodeColorObject = APP_CONFIG.COLORS.BLUE;
+        }
+        if(triple[1] === "heeftArchitect") {
+          nodeColorObject = APP_CONFIG.COLORS.YELLOW;
         }
         nodes.push(new Node({
           id: triple[2].id,
