@@ -1,4 +1,4 @@
-<p>Aantal gevonden rijksmonumenten: {{total}}</p>
+<p>Aantal gevonden rijksmonumenten van type "fabriek": {{total}}</p>
 <app-search-list (listItems)="onListItems($event)" (itemClick)="itemClicked($event)" [query]="query"
     [objectName]="'rijksmonument'" [showKey]=false [geometrieWKTList]="geometrieWKTList" [showMap]=true
     [hiddenKeys]="['cultureelHistorischObject', 'geometrieWKT', 'omschrijving']"></app-search-list>

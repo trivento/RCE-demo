@@ -14,6 +14,10 @@ const routes: Routes = [
   {
     path: 'detail',
     loadChildren: () => import('./pages/detail/detail.module').then(m => m.DetailPageModule)
+  },
+  {
+    path: 'visual-search',
+    loadChildren: () => import('./pages/visual-search/visual-search.module').then(m => m.VisualSearchPageModule)
   }
 ];
 

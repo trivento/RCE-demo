@@ -6,7 +6,15 @@
   <ion-row>
     <ion-col [sizeLg]="showMap ? 4 : 12" sizeMd="12" sizeSm="12" sizeXs="12">
       <ion-content>
-        <ion-virtual-scroll [items]="filteredValues" approxItemHeight="44px">
+        <ion-item *ngFor="let value of filteredValues" (click)="itemClicked(value)" class="list-item">
+          <ion-label>
+            <div *ngFor="let item of value | keyvalue">
+              <div *ngIf="hiddenKeys.indexOf(item.key) === -1"><b *ngIf="showKey">{{item.key}}: </b>
+                {{item.value}}</div>
+            </div>
+          </ion-label>
+        </ion-item>
+        <!-- <ion-virtual-scroll [items]="filteredValues" approxItemHeight="44px">
           <ion-item *virtualItem="let value" (click)="itemClicked(value)" class="list-item">
             <ion-label>
               <div *ngFor="let item of value | keyvalue">
@@ -15,7 +23,7 @@
               </div>
             </ion-label>
           </ion-item>
-        </ion-virtual-scroll>
+        </ion-virtual-scroll> -->
       </ion-content>
     </ion-col>
     <ion-col *ngIf="showMap" sizeLg="8" sizeMd="12" sizeSm="12" sizeXs="12">

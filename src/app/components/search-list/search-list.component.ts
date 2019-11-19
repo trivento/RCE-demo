@@ -40,7 +40,10 @@ export class SearchListComponent implements OnChanges {
         let retVal: any = {};
         rdfResult.head.vars.forEach(variable => {
           //@ts-ignore
-          retVal[variable] = item[variable].value;
+          if (item[variable]) {
+            //@ts-ignore
+            retVal[variable] = item[variable].value;
+          }
         });
         return retVal;
       });

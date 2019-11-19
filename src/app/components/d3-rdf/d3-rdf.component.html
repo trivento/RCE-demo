@@ -1,0 +1,23 @@
+<div>
+  <!-- <ion-toolbar [hidden]="hideSearch">
+    <ion-searchbar color="light" placeholder="zoek rijksmonument" [(ngModel)]="searchString" (ionChange)="search()">
+    </ion-searchbar>
+  </ion-toolbar> -->
+  <div *ngIf="cultHistObj" class="cult-hist-header">
+    <span><b>{{cultHistObj.entity.huidigeNaam}}</b> met functie <b>{{cultHistObj.entity.functieNaam}}</b> heeft
+      {{cultHistObjEvents.length > 0 ? cultHistObjEvents.length > 1 ? ' deze historische gebeurtenissen:' : ' deze historische gebeurtenis:' : ' geen historische gebeurtenissen.' }}
+    </span>
+  </div>
+  <ion-grid>
+    <ion-row justify-content-between>
+      <ion-col col-1 class="event-node" *ngFor="let node of cultHistObjEvents">
+        <b>{{node?.entity.startdatum.value}}</b><br>
+        {{node?.entity.gebeurtenisNaam.value}}
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</div>
+<ion-content #graphContent>
+  <app-d3-graph #D3Graph [options]="options" [nodes]="nodes" [links]="links" (nodeClicked)="nodeClicked($event)">
+  </app-d3-graph>
+</ion-content>

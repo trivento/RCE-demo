@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {Router} from '@angular/router';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-global-header',
@@ -7,20 +7,23 @@ import {Router} from '@angular/router';
     styleUrls: ['./global-header.component.scss'],
 })
 export class GlobalHeaderComponent {
-
     public appPages = [
         {
-            title: 'Home',
+            title: 'Lijst weergave',
             url: '/home',
             icon: 'home'
+        }, {
+            title: 'Node weergave',
+            url: '/visual-search',
+            icon: 'search'
         }
     ];
 
 
-  constructor(private router: Router) {
-  }
+    constructor(public router: Router) {
+    }
 
     openMenu(item: string) {
-       this.router.navigate([item]);
+        this.router.navigate([item]);
     }
 }

@@ -1,0 +1,12 @@
+.node {
+    cursor: pointer;
+    stroke-width: 5;
+    transition: stroke-width 0.1s ease-out, fill 0.1s ease-out, stroke 0.1s ease-out;
+}
+
+.node-text {
+    stroke-width: 0.6px;
+    cursor: pointer;
+    text-anchor: middle;
+    font-weight: bold;
+}

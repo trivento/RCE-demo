@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UiService } from '../../services/ui/ui.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { SearchService } from 'src/app/services/search/search.service';
 import { MapsGeoMetrie } from '../../models/rijksmonument.model';
 
 @Component({
@@ -11,32 +10,43 @@ import { MapsGeoMetrie } from '../../models/rijksmonument.model';
     styleUrls: ['./rijksmonument-detail.component.scss'],
 })
 export class RijksmonumentDetailComponent implements OnInit, OnDestroy {
-    private items = [];
-    private item;
-    private geometrieWKT: MapsGeoMetrie = { huidigeNaam: '', geometrieWKT: '' };
+    items = [];
+    item;
+    geometrieWKT: MapsGeoMetrie = { huidigeNaam: '', geometrieWKT: '' };
     unsubscribe = new Subject<void>();
-    private query: string;
+    query: string;
 
-    constructor(private uiService: UiService,
-        private searchService: SearchService) {
+    constructor(private uiService: UiService) {
     }
 
     ngOnInit() {
         this.uiService.activeRijksmonument.pipe(takeUntil(this.unsubscribe)).subscribe(rm => {
-            console.log(rm);
             if (rm) {
                 this.item = rm;
                 if (this.item.cultureelHistorischObject) {
                     this.query = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                     PREFIX ceo: <https://linkeddata.cultureelerfgoed.nl/def/ceo#>
-                    SELECT ?architect ?actorEnRol WHERE {
+                    SELECT DISTINCT ?architect WHERE {
                       <${this.item.cultureelHistorischObject}> ceo:heeftGebeurtenis ?obj .
                       ?obj ceo:heeftActorEnRol ?actorEnRol .
                       ?actorEnRol ceo:rol ?rol
                       FILTER CONTAINS(?rol, "architect")
                       ?actorEnRol ceo:actor ?architect
                     }`;
+                } else {
+                    if (this.item.uri) {
+                        this.query = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                        PREFIX ceo: <https://linkeddata.cultureelerfgoed.nl/def/ceo#>
+                        SELECT DISTINCT ?architect WHERE {
+                          <${this.item.uri}> ceo:heeftGebeurtenis ?obj .
+                          ?obj ceo:heeftActorEnRol ?actorEnRol .
+                          ?actorEnRol ceo:rol ?rol
+                          FILTER CONTAINS(?rol, "architect")
+                          ?actorEnRol ceo:actor ?architect
+                        }`;
+                    } 
                 }
                 this.geometrieWKT = { huidigeNaam: this.item.huidigeNaam, geometrieWKT: this.item.geometrieWKT };
             }

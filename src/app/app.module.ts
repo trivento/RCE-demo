@@ -12,6 +12,7 @@ import { httpInterceptorProviders } from './services/interceptors';
 import { SearchService } from './services/search/search.service';
 import { HttpClientModule } from '@angular/common/http';
 import {AgmCoreModule} from '@agm/core';
+import { D3Service } from './services/d3/d3.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,7 +20,7 @@ import {AgmCoreModule} from '@agm/core';
   imports: [
     BrowserModule,
     AgmCoreModule.forRoot({apiKey: 'AIzaSyDYUV7xng7k_I61cRhQdySGI8td8DCbUsE'}),
-    IonicModule.forRoot(),
+    IonicModule.forRoot({animated: false}),
     HttpClientModule,
     AppRoutingModule
   ],
@@ -28,6 +29,7 @@ import {AgmCoreModule} from '@agm/core';
     SplashScreen,
     SearchService,
     httpInterceptorProviders,
+    D3Service,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
